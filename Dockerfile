@@ -11,6 +11,7 @@ WORKDIR $WORKDIR
 COPY --from=0 /usr/src/app/node_modules node_modules
 RUN chown $USER:$USER $WORKDIR
 COPY --chown=node . $WORKDIR
+
 # In production environment uncomment the next line
 
 #RUN chown -R $USER:$USER /home/$USER && chmod -R g-s,o-rx /home/$USER && chmod -R o-wrx $WORKDIR
