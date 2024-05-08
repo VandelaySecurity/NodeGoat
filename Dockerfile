@@ -18,4 +18,3 @@ COPY --chown=node . $WORKDIR
 USER $USER
 
 EXPOSE 4002
-
