@@ -1,5 +1,5 @@
 FROM node:12-alpine
-FROM node:12-alpine
+FROM node:latest
 ENV WORKDIR /usr/src/app/
 WORKDIR $WORKDIR
 COPY package*.json $WORKDIR
