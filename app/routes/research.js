@@ -10,6 +10,11 @@ function ResearchHandler (db) {
         
         if (req.query.symbol) {
             const url = req.query.url+req.query.symbol; 
+
+            if (!/^https?:\/\//.test(req.query.url)) {
+                return res.status(400).send("Invalid URL");
+            }
+
             return needle.get(url, (error, newResponse) => {
                 if (!error && newResponse.statusCode == 200)
                     res.writeHead(200, {'Content-Type': 'text/html'});
