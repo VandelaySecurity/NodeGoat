@@ -9,7 +9,13 @@ function ResearchHandler (db) {
     this.displayResearch = (req, res) => {
         
         if (req.query.symbol) {
-            const url = req.query.url+req.query.symbol; 
+            const baseUrl = 'https://trusted-stock-service.com/api?symbol=';
+            const symbol = req.query.symbol;
+            // Validate symbol to allow only alphanumeric characters
+            if (!/^[a-zA-Z0-9]+$/.test(symbol)) {
+                return res.status(400).send('Invalid symbol parameter');
+            }
+            const url = baseUrl + encodeURIComponent(symbol);
             return needle.get(url, (error, newResponse) => {
                 if (!error && newResponse.statusCode == 200)
                     res.writeHead(200, {'Content-Type': 'text/html'});
