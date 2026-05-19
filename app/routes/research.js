@@ -10,6 +10,8 @@ function ResearchHandler (db) {
         
         if (req.query.symbol) {
             const url = req.query.url+req.query.symbol; 
+            const baseUrl = "https://example.com/api/stock?symbol="; // Fixed base URL
+            const url = baseUrl + encodeURIComponent(req.query.symbol);
             return needle.get(url, (error, newResponse) => {
                 if (!error && newResponse.statusCode == 200)
                     res.writeHead(200, {'Content-Type': 'text/html'});
