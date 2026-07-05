@@ -40,7 +40,7 @@ function ProfileHandler (db) {
         // --
         // The Fix: Instead of using greedy quantifiers the same regex will work if we omit the second quantifier +
         // const regexPattern = /([0-9]+)\#/;
-        const regexPattern = /([0-9]+)+\#/;
+        const regexPattern = /[0-9]+\#/;
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
         // if the regex test fails we do not allow saving
@@ -72,7 +72,6 @@ function ProfileHandler (db) {
             (err, user) => {
 
                 if (err) return next(err);
-
                 // WARN: Applying any sting specific methods here w/o checking type of inputs could lead to DoS by HPP
                 //firstName = firstName.trim();
                 user.updateSuccess = true;
