@@ -33,6 +33,20 @@ function ProfileHandler (db) {
 
         const {firstName, lastName, ssn, dob, address, bankAcc, bankRouting} = req.body;
 
+        // Validate bankRouting length to prevent ReDoS
+        if (typeof bankRouting !== 'string' || bankRouting.length > 50) {
+            return res.render("profile", {
+                updateError: "Bank Routing number format is invalid",
+                firstName,
+                lastName,
+                ssn,
+                dob,
+                address,
+                bankAcc,
+                bankRouting: ''
+            });
+        }
+
         // Fix for Section: ReDoS attack
         // The following regexPattern that is used to validate the bankRouting number is insecure and vulnerable to
         // catastrophic backtracking which means that specific type of input may cause it to consume all CPU resources
