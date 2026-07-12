@@ -41,6 +41,19 @@ function ProfileHandler (db) {
         // The Fix: Instead of using greedy quantifiers the same regex will work if we omit the second quantifier +
         // const regexPattern = /([0-9]+)\#/;
         const regexPattern = /[0-9]+\#/;
+        // Prevent ReDoS by limiting input length before regex evaluation
+        if (typeof bankRouting !== 'string' || bankRouting.length > 20) {
+            return res.render("profile", {
+                updateError: "Bank Routing number exceeds maximum allowed length",
+                firstName,
+                lastName,
+                ssn,
+                dob,
+                address,
+                bankAcc,
+                bankRouting: ''
+            });
+        }
         // Allow only numbers with a suffix of the letter #, for example: 'XXXXXX#'
         const testComplyWithRequirements = regexPattern.test(bankRouting);
         // if the regex test fails we do not allow saving
