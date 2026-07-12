@@ -163,6 +163,10 @@ function SessionHandler (db) {
             return false;
         }
         if (email !== "") {
+            if (email.length > 254) {
+                errors.emailError = "Invalid email address";
+                return false;
+            }
             if (!EMAIL_RE.test(email)) {
                 errors.emailError = "Invalid email address";
                 return false;
@@ -193,7 +197,6 @@ function SessionHandler (db) {
                 }
 
                 userDAO.addUser(userName, firstName, lastName, password, email, (err, user) => {
-
                     if (err) return next(err);
 
                     //prepare data for the user
