@@ -7,6 +7,7 @@ const MemosHandler = require("./memos");
 const ResearchHandler = require("./research");
 
 const ErrorHandler = require("./error").errorHandler;
+const rateLimit = require('express-rate-limit');
 
 const index = (app, db) => {
 
@@ -20,6 +21,14 @@ const index = (app, db) => {
     const memosHandler = new MemosHandler(db);
     const researchHandler = new ResearchHandler(db);
 
+    const loginLimiter = rateLimit({
+        windowMs: 15 * 60 * 1000, // 15 minutes
+        max: 5, // limit each IP to 5 requests per windowMs
+        message: 'Too many login attempts from this IP, please try again after 15 minutes',
+        standardHeaders: true,
+        legacyHeaders: false,
+    });
+
     // Middleware to check if a user is logged in
     const isLoggedIn = sessionHandler.isLoggedInMiddleware;
 
@@ -31,7 +40,7 @@ const index = (app, db) => {
 
     // Login form
     app.get("/login", sessionHandler.displayLoginPage);
-    app.post("/login", sessionHandler.handleLoginRequest);
+    app.post("/login", loginLimiter, sessionHandler.handleLoginRequest);
 
     // Signup form
     app.get("/signup", sessionHandler.displaySignupPage);
@@ -61,7 +70,6 @@ const index = (app, db) => {
 
     // Allocations Page
     app.get("/allocations/:userId", isLoggedIn, allocationsHandler.displayAllocations);
-
     // Memos Page
     app.get("/memos", isLoggedIn, memosHandler.displayMemos);
     app.post("/memos", isLoggedIn, memosHandler.addMemos);
