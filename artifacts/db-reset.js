@@ -4,11 +4,19 @@
 
 // This script initializes the database. You can set the environment variable
 // before running it (default: development). ie:
-// NODE_ENV=production node artifacts/db-reset.js
+// Requires: ADMIN_PASSWORD, USER1_PASSWORD, USER2_PASSWORD
+// NODE_ENV=production ADMIN_PASSWORD=... USER1_PASSWORD=... USER2_PASSWORD=... node artifacts/db-reset.js
 
 const _ = require("underscore");
 const { MongoClient } = require("mongodb");
 const { db } = require("../config/config");
+
+const requiredEnvVars = ['ADMIN_PASSWORD', 'USER1_PASSWORD', 'USER2_PASSWORD'];
+const missing = requiredEnvVars.filter(v => !process.env[v]);
+if (missing.length > 0) {
+    console.error(`ERROR: Missing required environment variables: ${missing.join(', ')}`);
+    process.exit(1);
+}
 
 const USERS_TO_INSERT = [
     {
@@ -16,8 +24,7 @@ const USERS_TO_INSERT = [
         "userName": "admin",
         "firstName": "Node Goat",
         "lastName": "Admin",
-        "password": "Admin_123",
-        //"password" : "$2a$10$8Zo/1e8KM8QzqOKqbDlYlONBOzukWXrM.IiyzqHRYDXqwB3gzDsba", // Admin_123
+        "password": process.env.ADMIN_PASSWORD,
         "isAdmin": true
     }, {
         "_id": 2,
@@ -25,16 +32,14 @@ const USERS_TO_INSERT = [
         "firstName": "John",
         "lastName": "Doe",
         "benefitStartDate": "2030-01-10",
-        "password": "User1_123"
-        // "password" : "$2a$10$RNFhiNmt2TTpVO9cqZElb.LQM9e1mzDoggEHufLjAnAKImc6FNE86",// User1_123
+        "password": process.env.USER1_PASSWORD
     }, {
         "_id": 3,
         "userName": "user2",
         "firstName": "Will",
         "lastName": "Smith",
         "benefitStartDate": "2025-11-30",
-        "password": "User2_123"
-        //"password" : "$2a$10$Tlx2cNv15M0Aia7wyItjsepeA8Y6PyBYaNdQqvpxkIUlcONf1ZHyq", // User2_123
+        "password": process.env.USER2_PASSWORD
     }];
 
 // Getting the global config taking in account he environment (proc)
