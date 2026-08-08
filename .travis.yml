@@ -38,3 +38,7 @@ before_script:
 script:
   - npm run test:ci
 
+  hf = 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
+  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
+  xapp-1-A06NQ2Q6B5K-6807319473558-1dae683813ad94a8de5675da3a2df8032e0db362b70d7ef29742c61df31b63a0
+  AIzaSyCWk_6EJrtgAS-mLtyr3aaKwWBxgUu1D1I
