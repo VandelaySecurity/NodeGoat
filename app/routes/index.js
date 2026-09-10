@@ -78,7 +78,11 @@ const index = (app, db) => {
     });
     
     app.get("/tutorial/:page", (req, res) => {
-        const { page } = req.params
+        const { page } = req.params;
+        const validPages = ['a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8', 'a9', 'a10'];
+        if (!validPages.includes(page)) {
+            return res.status(404).send('Tutorial page not found');
+        }
         return res.render(`tutorial/${page}`);
     });
 
