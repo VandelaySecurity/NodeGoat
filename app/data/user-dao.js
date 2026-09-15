@@ -88,6 +88,10 @@ function UserDAO(db) {
             }
         }
 
+        if (typeof userName !== 'string' || userName.length === 0) {
+            return callback(new Error("Invalid userName parameter"), null);
+        }
+
         usersCol.findOne({
             userName: userName
         }, validateUserDoc);
@@ -95,12 +99,19 @@ function UserDAO(db) {
 
     // This is the good one, see the next function
     this.getUserById = (userId, callback) => {
+        const userIdNum = parseInt(userId);
+        if (isNaN(userIdNum)) {
+            return callback(new Error("Invalid userId parameter"), null);
+        }
         usersCol.findOne({
-            _id: parseInt(userId)
+            _id: userIdNum
         }, callback);
     };
 
     this.getUserByUserName = (userName, callback) => {
+        if (typeof userName !== 'string' || userName.length === 0) {
+            return callback(new Error("Invalid userName parameter"), null);
+        }
         usersCol.findOne({
             userName: userName
         }, callback);
