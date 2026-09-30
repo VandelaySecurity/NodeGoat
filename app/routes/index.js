@@ -68,8 +68,15 @@ const index = (app, db) => {
 
     // Handle redirect for learning resources link
     app.get("/learn", isLoggedIn, (req, res) => {
-        // Insecure way to handle redirects by taking redirect url from query string
-        return res.redirect(req.query.url);
+        const url = req.query.url;
+        
+        // Validate that URL is a relative path within the application
+        if (url && url.startsWith('/') && !url.startsWith('//')) {
+            return res.redirect(url);
+        }
+        
+        // If invalid or missing, redirect to safe default
+        return res.redirect('/tutorial');
     });
 
     // Handle redirect for learning resources link
