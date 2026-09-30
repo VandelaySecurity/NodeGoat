@@ -1,10 +1,14 @@
 const ResearchDAO = require("../data/research-dao").ResearchDAO;
 const needle = require('needle');
+const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
 
 function ResearchHandler (db) {
     "use strict";
 
     const researchDAO = new ResearchDAO(db);
+    const window = new JSDOM('').window;
+    const DOMPurify = createDOMPurify(window);
 
     this.displayResearch = (req, res) => {
         
@@ -15,7 +19,7 @@ function ResearchHandler (db) {
                     res.writeHead(200, {'Content-Type': 'text/html'});
                     res.write('<h1>The following is the stock information you requested.</h1>\n\n');
                     res.write('\n\n');
-                    res.write(newResponse.body);
+                    res.write(DOMPurify.sanitize(newResponse.body));
                     return res.end();
             });
         }
