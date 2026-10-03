@@ -19,11 +19,10 @@ function ContributionsHandler (db) {
 
     this.handleContributionsUpdate = (req, res, next) => {
 
-        /*jslint evil: true */
-        // Insecure use of eval() to parse inputs
-        const preTax = parseInt(req.body.preTax);
-        const afterTax = parseInt(req.body.afterTax);
-        const roth = parseInt(req.body.roth);
+        // Strict numeric validation to prevent injection
+        const preTax = Number(req.body.preTax);
+        const afterTax = Number(req.body.afterTax);
+        const roth = Number(req.body.roth);
 
         /*
         //Fix for A1 -1 SSJS Injection attacks - uses alternate method to eval
@@ -31,10 +30,14 @@ function ContributionsHandler (db) {
         const afterTax = parseInt(req.body.afterTax);
         const roth = parseInt(req.body.roth);
         */
-        const { userId } = req.session;
+        const { userId } = req.session;
 
         //validate contributions
-        const validations = [isNaN(preTax), isNaN(afterTax), isNaN(roth), preTax < 0, afterTax < 0, roth < 0]
+        const validations = [
+            isNaN(preTax), isNaN(afterTax), isNaN(roth),
+            !Number.isInteger(preTax), !Number.isInteger(afterTax), !Number.isInteger(roth),
+            preTax < 0, afterTax < 0, roth < 0
+        ]
         const isInvalid = validations.some(validation => validation)
         if (isInvalid) {
             return res.render("contributions", {
@@ -51,7 +54,6 @@ function ContributionsHandler (db) {
         }
 
         contributionsDAO.update(userId, preTax, afterTax, roth, (err, contributions) => {
-
             if (err) return next(err);
 
             contributions.updateSuccess = true;
