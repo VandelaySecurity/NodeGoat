@@ -52,12 +52,13 @@ const parseResponse = (err, res, comm) => {
 
 
 // Starting here
-MongoClient.connect(db, (err, db) =>  {
+MongoClient.connect(db, (err, client) =>  {
     if (err) {
         console.log("ERROR: connect");
         console.log(JSON.stringify(err));
         process.exit(1);
     }
+    const db = client.db();
     console.log("Connected to the database: " + db);
 
     // remove existing data (if any), we don't want to look for errors here
