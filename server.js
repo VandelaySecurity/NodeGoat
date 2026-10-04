@@ -121,9 +121,6 @@ MongoClient.connect(db, (err, db) => {
 
     // Initializing marked library
     // Fix for A9 - Insecure Dependencies
-    marked.setOptions({
-        sanitize: true
-    });
     app.locals.marked = marked;
 
     // Application routes
