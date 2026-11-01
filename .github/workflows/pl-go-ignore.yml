@@ -1,0 +1,11 @@
+name: pl-go-ignore
+on:
+  issues:
+    types: [opened]
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ignored ${{ github.event.issue.title }}" # legit:ignore
+      - run: echo "ignored scoped ${{ github.event.issue.body }}" # legit:ignore-pipeline
+      - run: echo "other scanner ${{ github.event.issue.title }} x" # legit:ignore-sast
