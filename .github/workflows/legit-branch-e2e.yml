@@ -1,0 +1,8 @@
+name: legit-branch-e2e
+on: workflow_dispatch
+jobs:
+  branch-only-mutable-image:
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - run: echo "branch-only finding for Legit pipeline branch E2E"
