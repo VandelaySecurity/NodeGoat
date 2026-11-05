@@ -68,8 +68,30 @@ const index = (app, db) => {
 
     // Handle redirect for learning resources link
     app.get("/learn", isLoggedIn, (req, res) => {
-        // Insecure way to handle redirects by taking redirect url from query string
-        return res.redirect(req.query.url);
+        const redirectUrl = req.query.url;
+        
+        if (!redirectUrl) {
+            return res.redirect("/dashboard");
+        }
+        
+        // Allow relative paths that don't start with //
+        if (redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')) {
+            return res.redirect(redirectUrl);
+        }
+        
+        // For absolute URLs, check against allowlist
+        try {
+            const url = new URL(redirectUrl);
+            const allowedHosts = ['trusted-learning-site.com']; // Configure as needed
+            if (allowedHosts.includes(url.hostname)) {
+                return res.redirect(redirectUrl);
+            }
+        } catch (e) {
+            // Invalid URL format
+        }
+        
+        // Default: redirect to safe location if validation fails
+        return res.redirect("/dashboard");
     });
 
     // Handle redirect for learning resources link
