@@ -124,7 +124,7 @@ MongoClient.connect(db, (err, db) => {
     marked.setOptions({
         sanitize: true
     });
-    app.locals.marked = marked;
+    app.locals.marked = marked.marked;
 
     // Application routes
     routes(app, db);
