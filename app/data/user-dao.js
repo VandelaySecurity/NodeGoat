@@ -66,6 +66,11 @@ function UserDAO(db) {
             */
         }
 
+        // Prevent NoSQL injection by ensuring userName and password are strings
+        if (typeof userName !== 'string' || typeof password !== 'string') {
+            return callback(new Error("Invalid input type"), null);
+        }
+
         // Callback to pass to MongoDB that validates a user document
         const validateUserDoc = (err, user) => {
 
@@ -95,12 +100,19 @@ function UserDAO(db) {
 
     // This is the good one, see the next function
     this.getUserById = (userId, callback) => {
+        const userIdNum = parseInt(userId);
+        if (isNaN(userIdNum)) {
+            return callback(new Error("Invalid user ID"), null);
+        }
         usersCol.findOne({
-            _id: parseInt(userId)
+            _id: userIdNum
         }, callback);
     };
 
     this.getUserByUserName = (userName, callback) => {
+        if (typeof userName !== 'string') {
+            return callback(new Error("Invalid input type"), null);
+        }
         usersCol.findOne({
             userName: userName
         }, callback);
